@@ -34,7 +34,32 @@ public class Encoder {
         }
         return binary;
     }
-
+    //
+    public static boolean[] encode(char [] sequence) {
+        boolean[] binary = new boolean[sequence.length * 2];
+        for (int i = 0; i < sequence.length; i++) {
+            boolean [] Neucl = new boolean[2];
+            switch (sequence[i]) {
+                case 'A':
+                    Neucl = A;
+                    break;
+                case 'C':
+                    Neucl = C;
+                    break;
+                case 'G':
+                    Neucl = G;
+                    break;
+                case 'T':
+                    Neucl = T;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid character in sequence: "+sequence[i]);
+            }
+            binary[2*i] = Neucl[0];
+            binary[2*i+1] = Neucl[1];
+        }
+        return binary;
+    }
     public static boolean[] complement(boolean[] sequence) {
         boolean[] comp = new boolean[sequence.length];
         for (int i = 0; i < sequence.length; i++) {

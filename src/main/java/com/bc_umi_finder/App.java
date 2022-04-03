@@ -19,24 +19,24 @@ public final class App {
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
 
         String inFile = args[0];
-        String queryInFile = args[1];
-        int threads = Integer.parseInt(args[2]);
-        int minEditDist = Integer.parseInt(args[3]);
-        int startIndex = Integer.parseInt(args[4]);
-        int endIndex = Integer.parseInt(args[5]);
+        // String queryInFile = args[1];
+        int threads = Integer.parseInt(args[1]);
+        int minEditDist = Integer.parseInt(args[2]);
+        int startIndex = Integer.parseInt(args[3]);
+        int endIndex = Integer.parseInt(args[4]);
         ///
-        BufferedReader in = new BufferedReader(new FileReader(queryInFile));
-        String str;
+        //BufferedReader in = new BufferedReader(new FileReader(queryInFile));
+        //String str;
 
-        List<String> searchSeqsList = new ArrayList<String>();
-        while((str = in.readLine()) != null){
-            searchSeqsList.add(str);
-        }
-        in.close();
-        String[] searchSeqs = searchSeqsList.toArray(new String[0]);
+        //List<String> searchSeqsList = new ArrayList<String>();
+        //while((str = in.readLine()) != null){
+        //    searchSeqsList.add(str);
+        //}
+        //in.close();
+        //String[] searchSeqs = searchSeqsList.toArray(new String[0]);
         //"D:/BC_UMI_FIND/combined_sc2F2.pass.fastq";
   
-        FileSeqFinder ffSeqFinder=new FileSeqFinder(inFile, threads, searchSeqs, minEditDist);
+        PolyAFinder ffSeqFinder=new PolyAFinder(inFile, threads, minEditDist);
         ffSeqFinder.find(startIndex,endIndex);
         // FastqParser fq = new FastqParser(in);
         

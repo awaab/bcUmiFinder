@@ -12,7 +12,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-public class FileSeqFinder {
+public class PolyAFinder {
     private FastqParser fqParser;
     private int threads;
     private boolean[][] searchSeqs;
@@ -20,8 +20,8 @@ public class FileSeqFinder {
     private PrintStream outStream;
     private PrintStream negOutStream;
     private ExecutorService executor;
-
-    public FileSeqFinder(String fileName, int threads, String[] searchSeqsStr, int minEditDistance)
+    String [] searchSeqsStr = {"TTTTTTTTTTTTTTTTTTT","AAAAAAAAAAAAAAAAAAA"};
+    public PolyAFinder(String fileName, int threads, int minEditDistance)
             throws FileNotFoundException {
         this.fqParser = new FastqParser(fileName);
         this.threads = threads;
@@ -30,11 +30,12 @@ public class FileSeqFinder {
             this.searchSeqs[i] = Encoder.encode(searchSeqsStr[i]);
         }
         this.minEditDistance = minEditDistance;
-        this.outStream = new PrintStream(new FileOutputStream(fileName + "found.txt"));
-        this.negOutStream = new PrintStream(new FileOutputStream(fileName + "notFound.txt"));
+        this.outStream = new PrintStream(new FileOutputStream(fileName + ".polyA.found.txt"));
+        this.negOutStream = new PrintStream(new FileOutputStream(fileName + ".polyA.notFound.txt"));
         for (int i = 0; i < searchSeqsStr.length; i++) {
-            this.outStream.println("# query seqID " + i + " " + searchSeqsStr[i]);
+            this.outStream.println("# queryID " + i + " " + searchSeqsStr[i]);
         }
+        this.outStream.println("# ReadID QueryID PosFound Dist");
     }
 
     public void find(int startIndex, int endIndex) throws InterruptedException, ExecutionException {
@@ -75,14 +76,13 @@ public class FileSeqFinder {
                 if (fut.get().size() == 0) {
                     this.negOutStream.println(seqs[iSeq][0]);
                 } else {
-                    this.outStream.println(seqs[iSeq][0]);
                     for (Integer[] i : fut.get()) {
                         String formattedIntString = Arrays.toString(i).toString()
                                 .replace(",", "")
                                 .replace("[", "")
                                 .replace("]", "")
                                 .trim();
-                        this.outStream.println(formattedIntString);
+                        this.outStream.println(seqs[iSeq][0]+" " + formattedIntString);
                     }
                 }
                 iSeq++;
