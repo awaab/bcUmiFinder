@@ -101,4 +101,14 @@ public class PolyAFinder {
         negOutStream.close();
     }
 
+    public static void main(String [] args) throws FileNotFoundException, InterruptedException, ExecutionException{
+        String inFile = args[0];
+        int threads = Integer.parseInt(args[1]);
+        int minEditDist = Integer.parseInt(args[2]);
+        int startIndex = Integer.parseInt(args[3]);
+        int endIndex = Integer.parseInt(args[4]);
+        PolyAFinder seqFinder=new PolyAFinder(inFile, threads, minEditDist);
+        seqFinder.find(startIndex,endIndex);
+    }
+
 }

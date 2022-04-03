@@ -1,6 +1,7 @@
 package com.bc_umi_finder;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -124,5 +125,14 @@ public class Read1Finder {
                 break;
             }
         }
+    }
+
+    public static void main(String [] args) throws Exception {
+        String resFile = args[0];
+        String fqFile = args[1];
+        int numThreads = Integer.parseInt(args[2]);
+        Read1Finder rf = new Read1Finder(fqFile, resFile, numThreads);
+        //String []s  = rfsf.next();
+        rf.find();
     }
 }
