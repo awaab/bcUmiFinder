@@ -21,14 +21,13 @@ public class Read1Finder {
     private ExecutorService executor;
     private boolean[] read1;
     private boolean[] read1Comp;
-    private final int querySeqLen = 10;
     private final String read1Str = "GATGTGCTGCATTGTAGAGTGT";
     private final String read1StrComp = "CTACACGACGCTCTTCCGATCT";
     private final int minEditDistance = 3;
     private PrintStream outStream;
     private PrintStream negOutStream;
 
-    public Read1Finder(String fastqFile, String resFile, int threads) throws Exception {
+    public Read1Finder(String fastqFile, String resFile, int threads, int querySeqLen) throws Exception {
         this.threads = threads;
         String fastqIndexFile = fastqFile + ".fai";
         System.out.println("loading fastq and index");
@@ -55,15 +54,15 @@ public class Read1Finder {
 
         while (true) {
             // System.out.println("=");
-                line = resReader.readLine();
-                if(line==null)return null;
-                if (line.charAt(0) == '#') {
-                    continue;
-                }
+            line = resReader.readLine();
+            if (line == null)
+                return null;
+            if (line.charAt(0) == '#') {
+                continue;
+            }
 
-                return line.split("\\s+");
+            return line.split("\\s+");
 
- 
         }
     }
 
@@ -127,12 +126,18 @@ public class Read1Finder {
         }
     }
 
-    public static void main(String [] args) throws Exception {
+    public static void main(String[] args) throws Exception {
         String resFile = args[0];
         String fqFile = args[1];
         int numThreads = Integer.parseInt(args[2]);
-        Read1Finder rf = new Read1Finder(fqFile, resFile, numThreads);
-        //String []s  = rfsf.next();
+        int querySeqLen;
+        try {
+            querySeqLen = Integer.parseInt(args[3]);
+        } catch (IndexOutOfBoundsException e) {
+            querySeqLen = 22;
+        }
+        Read1Finder rf = new Read1Finder(fqFile, resFile, numThreads, querySeqLen);
+        // String []s = rfsf.next();
         rf.find();
     }
 }
