@@ -1,9 +1,11 @@
 package com.bc_umi_finder;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -23,9 +25,10 @@ public class Read1Finder {
     private boolean[] read1Comp;
     private final String read1Str = "GATGTGCTGCATTGTAGAGTGT";
     private final String read1StrComp = "CTACACGACGCTCTTCCGATCT";
-    private PrintStream outStream;
-    private PrintStream negOutStream;
+
     private int maxEditDistance;
+    private BufferedWriter output;
+    private BufferedWriter negOutput;
 
     public Read1Finder(String fastqFile, String resFile, int threads, int querySeqLen, int maxEditDistance) throws Exception {
         this.threads = threads;
@@ -37,8 +40,12 @@ public class Read1Finder {
         this.read1 = Encoder.encode(read1Str.substring(0, querySeqLen));
         this.read1Comp = Encoder.encode(read1StrComp.substring(0, querySeqLen));
         this.maxEditDistance = maxEditDistance;
-        this.outStream = new PrintStream(new FileOutputStream(fastqFile + ".read1.found.txt"));
-        this.negOutStream = new PrintStream(new FileOutputStream(fastqFile + ".read1.notFound.txt"));
+
+
+        // Creates a BufferedWriter
+        this.output = new BufferedWriter(new FileWriter(fastqFile + ".read1.found.txt"));
+
+        this.negOutput = new BufferedWriter(new FileWriter(fastqFile + ".read1.notFound.txt"));
     }
 
     public String[][] next(int n) throws IOException {
@@ -106,15 +113,15 @@ public class Read1Finder {
                 if (reads[iRead] == null) {
                     System.out.println("YAHTZI");
                 }
-                // this.outStream.println(Arrays.toString(seqs[iRead]));
-                // this.outStream.println(seqs[iRead][seqs[iRead].length-1]);
+                // this.output.write(Arrays.toString(seqs[iRead]));
+                // this.output.write(seqs[iRead][seqs[iRead].length-1]);
 
                 if (fut.get().size() == 0) {
-                    this.negOutStream.println(reads[iRead][0]);
+                    this.negOutput.write(reads[iRead][0]+'\n');
                 } else {
                     for (Integer[] i : fut.get())
-                        this.outStream.println(Utils.arrToStr(reads[iRead]) +
-                                " " + Utils.arrToStr(i));
+                        this.output.write(Utils.arrToStr(reads[iRead]) +
+                                " " + Utils.arrToStr(i) +'\n');
                 }
                 iRead++;
             }
