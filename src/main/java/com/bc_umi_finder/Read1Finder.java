@@ -23,11 +23,11 @@ public class Read1Finder {
     private boolean[] read1Comp;
     private final String read1Str = "GATGTGCTGCATTGTAGAGTGT";
     private final String read1StrComp = "CTACACGACGCTCTTCCGATCT";
-    private final int minEditDistance = 3;
     private PrintStream outStream;
     private PrintStream negOutStream;
+    private int maxEditDistance;
 
-    public Read1Finder(String fastqFile, String resFile, int threads, int querySeqLen) throws Exception {
+    public Read1Finder(String fastqFile, String resFile, int threads, int querySeqLen, int maxEditDistance) throws Exception {
         this.threads = threads;
         String fastqIndexFile = fastqFile + ".fai";
         System.out.println("loading fastq and index");
@@ -36,7 +36,7 @@ public class Read1Finder {
         this.resReader = new BufferedReader(new FileReader(resFile));
         this.read1 = Encoder.encode(read1Str.substring(0, querySeqLen));
         this.read1Comp = Encoder.encode(read1StrComp.substring(0, querySeqLen));
-
+        this.maxEditDistance = maxEditDistance;
         this.outStream = new PrintStream(new FileOutputStream(fastqFile + ".read1.found.txt"));
         this.negOutStream = new PrintStream(new FileOutputStream(fastqFile + ".read1.notFound.txt"));
     }
@@ -88,7 +88,7 @@ public class Read1Finder {
                     else if (reads[i][1].charAt(0) == '1') // Poly A
                         searchSeqs[0] = read1;
                     int endIndex = Integer.parseInt(reads[i][2]);
-                    SeqFindCallable callable = new SeqFindCallable(searchSeqs, encodedSeq, this.minEditDistance, 0,
+                    SeqFindCallable callable = new SeqFindCallable(searchSeqs, encodedSeq, this.maxEditDistance, 0,
                             endIndex);
                     Future<ArrayList<Integer[]>> future = executor.submit(callable);
                     resultList.add(future);
@@ -131,12 +131,18 @@ public class Read1Finder {
         String fqFile = args[1];
         int numThreads = Integer.parseInt(args[2]);
         int querySeqLen;
+        int maxEditDistance;
         try {
             querySeqLen = Integer.parseInt(args[3]);
         } catch (IndexOutOfBoundsException e) {
             querySeqLen = 22;
         }
-        Read1Finder rf = new Read1Finder(fqFile, resFile, numThreads, querySeqLen);
+        try {
+            maxEditDistance = Integer.parseInt(args[4]);
+        } catch (IndexOutOfBoundsException e) {
+            maxEditDistance = 5;
+        }
+        Read1Finder rf = new Read1Finder(fqFile, resFile, numThreads, querySeqLen, maxEditDistance);
         // String []s = rfsf.next();
         rf.find();
     }

@@ -16,12 +16,12 @@ public class PolyAFinder {
     private FastqParser fqParser;
     private int threads;
     private boolean[][] searchSeqs;
-    private int minEditDistance;
+    private int maxEditDistance;
     private PrintStream outStream;
     private PrintStream negOutStream;
     private ExecutorService executor;
     String [] searchSeqsStr = {"TTTTTTTTTTTTTTTTTTT","AAAAAAAAAAAAAAAAAAA"};
-    public PolyAFinder(String fileName, int threads, int minEditDistance)
+    public PolyAFinder(String fileName, int threads, int maxEditDistance)
             throws FileNotFoundException {
         this.fqParser = new FastqParser(fileName);
         this.threads = threads;
@@ -29,7 +29,7 @@ public class PolyAFinder {
         for (int i = 0; i < searchSeqs.length; i++) {
             this.searchSeqs[i] = Encoder.encode(searchSeqsStr[i]);
         }
-        this.minEditDistance = minEditDistance;
+        this.maxEditDistance = maxEditDistance;
         this.outStream = new PrintStream(new FileOutputStream(fileName + ".polyA.found.txt"));
         this.negOutStream = new PrintStream(new FileOutputStream(fileName + ".polyA.notFound.txt"));
         for (int i = 0; i < searchSeqsStr.length; i++) {
@@ -55,7 +55,7 @@ public class PolyAFinder {
                     // this.outStream.println(""+readsSoFar+" Reads so far: ");
                     // this.outStream.println(seqs[i][2]);
                     boolean[] encodedSeq = Encoder.encode(seqs[i][2]);
-                    SeqFindCallable callable = new SeqFindCallable(searchSeqs, encodedSeq, minEditDistance, startIndex,
+                    SeqFindCallable callable = new SeqFindCallable(searchSeqs, encodedSeq, maxEditDistance, startIndex,
                             endIndex);
                     Future<ArrayList<Integer[]>> future = executor.submit(callable);
                     resultList.add(future);
