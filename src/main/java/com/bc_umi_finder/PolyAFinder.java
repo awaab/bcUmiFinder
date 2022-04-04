@@ -1,7 +1,9 @@
 package com.bc_umi_finder;
 
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -17,12 +19,12 @@ public class PolyAFinder {
     private int threads;
     private boolean[][] searchSeqs;
     private int maxEditDistance;
-    private PrintStream outStream;
-    private PrintStream negOutStream;
     private ExecutorService executor;
+    private BufferedWriter output;
+    private BufferedWriter negOutput;
     String [] searchSeqsStr = {"TTTTTTTTTTTTTTTTTTT","AAAAAAAAAAAAAAAAAAA"};
     public PolyAFinder(String fileName, int threads, int maxEditDistance)
-            throws FileNotFoundException {
+            throws IOException {
         this.fqParser = new FastqParser(fileName);
         this.threads = threads;
         this.searchSeqs = new boolean[searchSeqsStr.length][];
@@ -30,15 +32,17 @@ public class PolyAFinder {
             this.searchSeqs[i] = Encoder.encode(searchSeqsStr[i]);
         }
         this.maxEditDistance = maxEditDistance;
-        this.outStream = new PrintStream(new FileOutputStream(fileName + ".polyA.found.txt"));
-        this.negOutStream = new PrintStream(new FileOutputStream(fileName + ".polyA.notFound.txt"));
+
+        this.output = new BufferedWriter(new FileWriter(fileName + ".polyA.found.txt"));
+
+        this.negOutput = new BufferedWriter(new FileWriter(fileName + ".polyA.notFound.txt"));
         for (int i = 0; i < searchSeqsStr.length; i++) {
-            this.outStream.println("# queryID " + i + " " + searchSeqsStr[i]);
+            this.output.write("# queryID " + i + " " + searchSeqsStr[i] + '\n');
         }
-        this.outStream.println("# ReadID QueryID PosFound Dist");
+        this.output.write("# ReadID QueryID PosFound Dist"+'\n');
     }
 
-    public void find(int startIndex, int endIndex) throws InterruptedException, ExecutionException {
+    public void find(int startIndex, int endIndex) throws InterruptedException, ExecutionException, IOException {
         startIndex *= 2;
         endIndex *= 2;
         int readsSoFar = 0;
@@ -74,7 +78,7 @@ public class PolyAFinder {
                 // this.outStream.println(seqs[iSeq][seqs[iSeq].length-1]);
                 
                 if (fut.get().size() == 0) {
-                    this.negOutStream.println(seqs[iSeq][0]);
+                    this.negOutput.write(seqs[iSeq][0] + '\n');
                 } else {
                     for (Integer[] i : fut.get()) {
                         String formattedIntString = Arrays.toString(i).toString()
@@ -82,7 +86,7 @@ public class PolyAFinder {
                                 .replace("[", "")
                                 .replace("]", "")
                                 .trim();
-                        this.outStream.println(seqs[iSeq][0]+" " + formattedIntString);
+                        this.output.write(seqs[iSeq][0]+" " + formattedIntString+'\n');
                     }
                 }
                 iSeq++;
@@ -97,11 +101,11 @@ public class PolyAFinder {
 
     public void close() throws IOException {
         fqParser.close();
-        outStream.close();
-        negOutStream.close();
+        output.close();
+        negOutput.close();
     }
 
-    public static void main(String [] args) throws FileNotFoundException, InterruptedException, ExecutionException{
+    public static void main(String [] args) throws InterruptedException, ExecutionException, IOException{
         String inFile = args[0];
         int threads = Integer.parseInt(args[1]);
         int minEditDist = Integer.parseInt(args[2]);
