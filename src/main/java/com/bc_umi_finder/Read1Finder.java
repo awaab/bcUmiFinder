@@ -16,15 +16,15 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-public class Read1Finder {
+public class Read1Finder{
     private FastqIndexedParser fqp;
-    private BufferedReader resReader;
     private int threads;
     private ExecutorService executor;
     private boolean[] read1;
     private boolean[] read1Comp;
     private final String read1Str = "GATGTGCTGCATTGTAGAGTGT";
     private final String read1StrComp = "CTACACGACGCTCTTCCGATCT";
+    private ResultReader resultReader;
 
     private int maxEditDistance;
     private BufferedWriter output;
@@ -36,49 +36,26 @@ public class Read1Finder {
         System.out.println("loading fastq and index");
         this.fqp = new FastqIndexedParser(fastqFile, fastqIndexFile);
         System.out.println("loading fastq and index Done");
-        this.resReader = new BufferedReader(new FileReader(resFile));
+        
         this.read1 = Encoder.encode(read1Str.substring(0, querySeqLen));
         this.read1Comp = Encoder.encode(read1StrComp.substring(0, querySeqLen));
         this.maxEditDistance = maxEditDistance;
 
-
+        this.resultReader = new ResultReader(resFile);
         // Creates a BufferedWriter
         this.output = new BufferedWriter(new FileWriter(fastqFile + ".read1.found.txt"));
 
         this.negOutput = new BufferedWriter(new FileWriter(fastqFile + ".read1.notFound.txt"));
     }
 
-    public String[][] next(int n) throws IOException {
-        String[][] res = new String[n][];
-        for (int i = 0; i < n; i++) {
-            res[i] = next();
-        }
-        return res;
-    }
 
-    public String[] next() throws IOException {
-        String line;
-
-        while (true) {
-            // System.out.println("=");
-            line = resReader.readLine();
-            if (line == null)
-                return null;
-            if (line.charAt(0) == '#') {
-                continue;
-            }
-
-            return line.split("\\s+");
-
-        }
-    }
 
     public void find() throws InterruptedException, ExecutionException, IOException {
         int readsSoFar = 0;
         while (true) {
             this.executor = Executors.newFixedThreadPool(threads);
             boolean foundNull = false;
-            String[][] reads = next(threads);
+            String[][] reads = this.resultReader.next(threads);
             ArrayList<Future<ArrayList<Integer[]>>> resultList = new ArrayList<Future<ArrayList<Integer[]>>>();
             for (int i = 0; i < reads.length; i++) {
                 if (reads[i] == null) {
@@ -96,7 +73,7 @@ public class Read1Finder {
                         searchSeqs[0] = read1;
                     int endIndex = Integer.parseInt(reads[i][2]);
                     SeqFindCallable callable = new SeqFindCallable(searchSeqs, encodedSeq, this.maxEditDistance, 0,
-                            endIndex);
+                            endIndex, true);
                     Future<ArrayList<Integer[]>> future = executor.submit(callable);
                     resultList.add(future);
                 }

@@ -9,18 +9,20 @@ public class SeqFindCallable implements Callable< ArrayList<Integer[]>> {
     private int maxEditDistance;
     private int startIndex;
     private int endIndex;
-    SeqFindCallable(boolean[][] searchSeqs, boolean [] seq, int maxEditDistance, int startIndex, int endIndex) {
+    private boolean findOnlyOne;
+    SeqFindCallable(boolean[][] searchSeqs, boolean [] seq, int maxEditDistance, int startIndex, int endIndex, boolean findOnlyOne) {
         this.maxEditDistance = maxEditDistance;
         this.searchSeqs = searchSeqs;
         this.seq = seq;
-        this.endIndex = endIndex;
-        this.startIndex = startIndex;
+        this.endIndex = endIndex * 2;
+        this.startIndex = startIndex * 2;
+        this.findOnlyOne = findOnlyOne;
     }
     @Override
     public ArrayList<Integer[]> call() throws Exception {
         ArrayList<Integer[]> result = new ArrayList<Integer[]>();
         for (int i = 0; i < searchSeqs.length; i++){
-            ArrayList <Integer[]> found = SeqFinder.findSeq(this.seq, searchSeqs[i], maxEditDistance, this.startIndex, this.endIndex);
+            ArrayList <Integer[]> found = SeqFinder.findSeq(this.seq, searchSeqs[i], maxEditDistance, this.startIndex, this.endIndex, this.findOnlyOne);
             for (Integer[] found_i: found){
                 Integer [] newFound  = {i,found_i[0],found_i[1]};
                 result.add(newFound);

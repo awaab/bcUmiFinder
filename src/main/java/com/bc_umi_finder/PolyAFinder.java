@@ -43,8 +43,6 @@ public class PolyAFinder {
     }
 
     public void find(int startIndex, int endIndex) throws InterruptedException, ExecutionException, IOException {
-        startIndex *= 2;
-        endIndex *= 2;
         int readsSoFar = 0;
         while (true) {
             this.executor = Executors.newFixedThreadPool(threads);
@@ -60,7 +58,7 @@ public class PolyAFinder {
                     // this.outStream.println(seqs[i][2]);
                     boolean[] encodedSeq = Encoder.encode(seqs[i][2]);
                     SeqFindCallable callable = new SeqFindCallable(searchSeqs, encodedSeq, maxEditDistance, startIndex,
-                            endIndex);
+                            endIndex, true);
                     Future<ArrayList<Integer[]>> future = executor.submit(callable);
                     resultList.add(future);
                 }
