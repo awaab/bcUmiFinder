@@ -107,11 +107,15 @@ public class BCFinder {
     }
 
     public static void main(String args[]) {
+        String []args2 = {"D:/BC_UMI_FIND/737K-april-2014_rc.txt", "D:/BC_UMI_FIND/SC_pass_combined.fastq.read1.found.txt", "D:/BC_UMI_FIND/SC_pass_combined.fastq", "4","0"};
         try {
-            BCFinder bcFinder = new BCFinder("D:/BC_UMI_FIND/737K-april-2014_rc.txt",
-                    "D:/BC_UMI_FIND/SC_pass_combined.fastq.read1.found.txt",
-                    "D:/BC_UMI_FIND/SC_pass_combined.fastq",
-                    4, 3);
+            if (args.length < 5)
+            args = args2;
+            BCFinder bcFinder = new BCFinder(args[0],
+                    args[1],
+                    args[2],
+                    Integer.parseInt(args[3]), 
+                    Integer.parseInt(args[4]));
             bcFinder.find();
         } catch (Exception e) {
             e.printStackTrace();
