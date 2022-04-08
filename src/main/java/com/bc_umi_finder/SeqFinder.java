@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 public class SeqFinder {
     public static ArrayList<Integer[]> findSeq(boolean []longSeq, boolean[] shortSeq, int maxEditDistance, int startIndex, int endIndex, boolean findOnlyOne) {
+        if(startIndex<0){
+            return null;
+        }
         ArrayList FoundSeq = new ArrayList<Integer[]>();
         int windowLen = shortSeq.length;
         endIndex = endIndex < longSeq.length ?  endIndex:longSeq.length ;

@@ -107,7 +107,7 @@ public class BCFinderFixedPos {
     }
 
     public static void main(String args[]) {
-        String []args2 = {"D:/BC_UMI_FIND/737K-april-2014_rc.txt", "D:/BC_UMI_FIND/SC_pass_combined.fastq.read1.found.txt", "D:/BC_UMI_FIND/SC_pass_combined.fastq", "4","2"};
+        String []args2 = {"D:/BC_UMI_FIND/737K-april-2014_rc.txt", "D:/BC_UMI_FIND/SC_pass_combined.fastq.polyA.found.txt", "D:/BC_UMI_FIND/SC_pass_combined.fastq", "4","2"};
         try {
             if (args.length < 5)
             args = args2;
