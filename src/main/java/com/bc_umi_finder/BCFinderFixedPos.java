@@ -69,6 +69,7 @@ public class BCFinderFixedPos {
 
                     int endIndex = Integer.parseInt(reads[i][2]) - 12; // polyT index - UMI len
                     int startIndex = Integer.parseInt(reads[i][2]) - 28; // polyT index - UMI len - BC len
+                    
                     SeqFindCallable callable = new SeqFindCallable(this.bcWhiteListArr, encodedSeq,
                             this.maxEditDistance, startIndex,
                             endIndex, false);

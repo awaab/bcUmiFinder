@@ -4,10 +4,11 @@ import java.util.ArrayList;
 
 public class SeqFinder {
     public static ArrayList<Integer[]> findSeq(boolean []longSeq, boolean[] shortSeq, int maxEditDistance, int startIndex, int endIndex, boolean findOnlyOne) {
+        
+        ArrayList foundSeq = new ArrayList<Integer[]>();
         if(startIndex<0){
-            return null;
+            return foundSeq;
         }
-        ArrayList FoundSeq = new ArrayList<Integer[]>();
         int windowLen = shortSeq.length;
         endIndex = endIndex < longSeq.length ?  endIndex:longSeq.length ;
         for(int i =startIndex; i + windowLen< endIndex;i+=2){
@@ -15,7 +16,7 @@ public class SeqFinder {
             
             int distance = DistanceFinder.findDistance(longSeq, shortSeq, longSeqStart, windowLen);
             if(distance <= maxEditDistance){
-                FoundSeq.add(new Integer[]{i / 2, distance});
+                foundSeq.add(new Integer[]{i / 2, distance});
                 if(findOnlyOne || distance == 0){
                     break;
                 }
@@ -25,6 +26,6 @@ public class SeqFinder {
             //    i++;
             //}
         }
-        return FoundSeq;
+        return foundSeq;
     }
 }
