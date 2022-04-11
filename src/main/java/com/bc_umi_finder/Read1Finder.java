@@ -73,7 +73,7 @@ public class Read1Finder{
                         searchSeqs[0] = read1;
                     int endIndex = Integer.parseInt(reads[i][2]);
                     SeqFindCallable callable = new SeqFindCallable(searchSeqs, encodedSeq, this.maxEditDistance, 0,
-                            endIndex, true);
+                            endIndex, true, false);
                     Future<ArrayList<Integer[]>> future = executor.submit(callable);
                     resultList.add(future);
                 }

@@ -72,7 +72,7 @@ public class BCFinderFixedPos {
                     
                     SeqFindCallable callable = new SeqFindCallable(this.bcWhiteListArr, encodedSeq,
                             this.maxEditDistance, startIndex,
-                            endIndex, false);
+                            endIndex, false, false);
                     Future<ArrayList<Integer[]>> future = executor.submit(callable);
                     resultList.add(future);
                 }

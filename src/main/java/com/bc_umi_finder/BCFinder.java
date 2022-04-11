@@ -71,7 +71,7 @@ public class BCFinder {
                     int startIndex = Integer.parseInt(reads[i][5]) + 10; // Read1 index
                     SeqFindCallable callable = new SeqFindCallable(this.bcWhiteListArr, encodedSeq,
                             this.maxEditDistance, startIndex,
-                            endIndex, false);
+                            endIndex, false, false);
                     Future<ArrayList<Integer[]>> future = executor.submit(callable);
                     resultList.add(future);
                 }

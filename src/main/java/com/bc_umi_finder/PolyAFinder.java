@@ -58,7 +58,7 @@ public class PolyAFinder {
                     // this.outStream.println(seqs[i][2]);
                     boolean[] encodedSeq = Encoder.encode(seqs[i][2]);
                     SeqFindCallable callable = new SeqFindCallable(searchSeqs, encodedSeq, maxEditDistance, startIndex,
-                            endIndex, true);
+                            endIndex, true, true);
                     Future<ArrayList<Integer[]>> future = executor.submit(callable);
                     resultList.add(future);
                 }
