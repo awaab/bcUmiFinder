@@ -15,7 +15,7 @@ public class SeqFinder {
         for (int i = startIndex; i + windowLen < endIndex; i += 2) {
             int longSeqStart = i;
 
-            int distance = DistanceFinder.findDistance(longSeq, shortSeq, longSeqStart, windowLen);
+            int distance = DistanceFinder.findDistance(longSeq, shortSeq, longSeqStart, windowLen, maxEditDistance);
             if (distance <= maxEditDistance) {
                 foundSeq.add(new Integer[] { i / 2, distance });
                 if (findOnlyOne || distance == 0) {

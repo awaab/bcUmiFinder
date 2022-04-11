@@ -2,7 +2,7 @@ package com.bc_umi_finder;
 import java.util.Arrays;
 
 public class DistanceFinder {
-    public static int findDistance(boolean []seq1, boolean []seq2, int seq1Start, int seq1Len) {
+    public static int findDistance(boolean []seq1, boolean []seq2, int seq1Start, int seq1Len, int maxEditDistance) {
         int len1 = seq1Len / 2;
         int len2 = seq2.length / 2;
     
@@ -22,6 +22,7 @@ public class DistanceFinder {
         for (int i = 0; i < len1; i++) {
             currentCompare[0] = seq1[seq1Start+i*2];
             currentCompare[1] = seq1[seq1Start+i*2+1];
+            int rowMin = Integer.MAX_VALUE;
             for (int j = 0; j < len2; j++) {
                 currentCompare[2] = seq2[j*2];
                 currentCompare[3] = seq2[j*2+1];
@@ -39,8 +40,10 @@ public class DistanceFinder {
                     min = delete > min ? min : delete;
                     dp[i + 1][j + 1] = min;
                 }
-
+                rowMin = dp[i + 1][j + 1] < rowMin?dp[i + 1][j + 1]: rowMin;
             }
+            if(rowMin>maxEditDistance)
+                return rowMin;
         }
     
         return dp[len1][len2];
