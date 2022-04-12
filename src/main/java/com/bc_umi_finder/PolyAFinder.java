@@ -111,6 +111,7 @@ public class PolyAFinder {
         int endIndex = Integer.parseInt(args[4]);
         PolyAFinder seqFinder=new PolyAFinder(inFile, threads, minEditDist);
         seqFinder.find(startIndex,endIndex);
+        seqFinder.close();
     }
 
 }

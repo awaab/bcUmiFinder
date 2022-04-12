@@ -110,4 +110,15 @@ public class FastqIndexedParser {
             return "[" + baseCount + space + start + space + charPerLine + space + basePerLine  + "]";
         }
     }
+
+
+    public void close() {
+        //close all buffer
+        try {
+            fastqIndexBufferReader.close();
+            fastqIndexReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

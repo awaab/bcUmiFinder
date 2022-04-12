@@ -86,9 +86,9 @@ public class BCFinderFixedPos {
             }
             int iRead = 0;
             for (Future<ArrayList<Integer[]>> fut : resultList) {
-                if (reads[iRead] == null) {
-                    System.out.println("YAHTZI");
-                }
+                // if (reads[iRead] == null) {
+                //    System.out.println("YAHTZI");
+                // }
 
                 if (fut.get().size() == 0) {
                     this.negOutput.write(reads[iRead][0] + '\n');
@@ -106,9 +106,20 @@ public class BCFinderFixedPos {
             }
         }
     }
+    private void close() {
+        // close all buffered writers and readers
+        try {
+            this.output.close();
+            this.negOutput.close();
+            this.resultReader.close();
+            this.fqp.close();
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+    }
 
     public static void main(String args[]) {
-        String []args2 = {"D:/BC_UMI_FIND/737K-april-2014_rc.txt", "D:/BC_UMI_FIND/SC_pass_combined.fastq.polyA.found.txt", "D:/BC_UMI_FIND/SC_pass_combined.fastq", "4","2"};
+        String []args2 = {"D:/BC_UMI_FIND/737K-april-2014_rc.txt", "D:/BC_UMI_FIND/small.SC_pass_combined.fastq.polyA.found.txt", "D:/BC_UMI_FIND/small.SC_pass_combined.fastq", "4","2"};
         try {
             if (args.length < 5)
             args = args2;
@@ -118,9 +129,12 @@ public class BCFinderFixedPos {
                     Integer.parseInt(args[3]), 
                     Integer.parseInt(args[4]));
             bcFinder.find();
+            bcFinder.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    
 
 }

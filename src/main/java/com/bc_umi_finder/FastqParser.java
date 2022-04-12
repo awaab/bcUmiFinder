@@ -23,9 +23,11 @@ public class FastqParser {
     public String [] next(){
         try{
             String line = reader.readLine();
+            if(line==null)
+                return null;
             // System.out.println(line);
             assert line.charAt(0) == '@';
-            StringTokenizer st = new StringTokenizer(line);
+            StringTokenizer  st = new StringTokenizer(line);
             String id = st.nextToken().substring(1);
             String runID = st.nextToken().substring(6);
             String sampleID = st.nextToken();

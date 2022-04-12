@@ -34,4 +34,13 @@ public class ResultReader {
 
         }
     }
+    public void close() {
+        //close all buffered readers
+        try {
+            resReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 }
