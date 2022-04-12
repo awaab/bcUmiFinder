@@ -12,12 +12,11 @@ public class SeqFinder {
         }
         int windowLen = shortSeq.length;
         endIndex = endIndex < longSeq.length ? endIndex : longSeq.length;
-        for (int i = startIndex; i + windowLen < endIndex; i += 2) {
-            int longSeqStart = i;
+        for (int longSeqStart = startIndex; longSeqStart + windowLen < endIndex; longSeqStart += 2) {
 
             int distance = DistanceFinder.findDistance(longSeq, shortSeq, longSeqStart, windowLen, maxEditDistance);
             if (distance <= maxEditDistance) {
-                foundSeq.add(new Integer[] { i / 2, distance });
+                foundSeq.add(new Integer[] { longSeqStart / 2, distance });
                 if (findOnlyOne || distance == 0) {
                     break;
                 }
@@ -32,11 +31,33 @@ public class SeqFinder {
 
     public static ArrayList<Integer[]> findSeqCheckStart(boolean[] longSeq, boolean[] shortSeq, int maxEditDistance,
             int startIndex, int endIndex, boolean findOnlyOne) {
-                
-        boolean matchStart = shortSeq[0] == longSeq[startIndex] && shortSeq[1] == longSeq[startIndex + 1];
-        if (!matchStart)
-            return new ArrayList<Integer[]>();
-        return findSeq(longSeq, shortSeq, maxEditDistance, startIndex, endIndex, findOnlyOne);
 
+        ArrayList foundSeq = new ArrayList<Integer[]>();
+        if (startIndex < 0) {
+            return foundSeq;
+        }
+        int windowLen = shortSeq.length;
+        endIndex = endIndex < longSeq.length ? endIndex : longSeq.length;
+        for (int longSeqStart = startIndex; longSeqStart + windowLen < endIndex; longSeqStart += 2) {
+            boolean matchStart = shortSeq[0] == longSeq[longSeqStart] && shortSeq[1] == longSeq[longSeqStart + 1];
+            int distance;
+            if (!matchStart)
+                distance =Integer.MAX_VALUE;
+            else
+                distance = DistanceFinder.findDistance(longSeq, shortSeq, longSeqStart, windowLen, maxEditDistance);
+            if (distance <= maxEditDistance) {
+                foundSeq.add(new Integer[] { longSeqStart / 2, distance });
+                if (findOnlyOne || distance == 0) {
+                    break;
+                }
+                // i += shortSeq.length;
+            }
+            // else{
+            // i++;
+            // }
+        }
+        return foundSeq;
     }
+
+    
 }

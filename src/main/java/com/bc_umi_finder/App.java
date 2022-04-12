@@ -17,12 +17,18 @@ import java.util.concurrent.ExecutionException;
 public final class App {
 
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
-        String seq1 = "AACAAAAACAAAACCAA";
-        String seq2 = "AAAAAAAAAAAAAAAAA";
+        String seq1 = "GGTGTACTTCGTTCAGTTACGTATTGCTCTACACGGCCTCTTCCGATCTTTAACGTCGAGCTGACTATTACGCTTTTTTTTTTTTTTTTTTTTTTTAGTAAAACTGAGATACTTATGAAAAAAGCCAAAATTCTTAAATGGTTGGGGGTTGGGTTTAAACAACTGCCTCAACATACGGAAACACAGGTCTTATGATACTTTACTTACCCCATGTACTCTACGTTGATACCACTGCTTAACCAATACGTAAC";
+        String seq2 = "TTTTTTTTTTTTTTTTTT";
         boolean[]  enc1 = Encoder.encode(seq1);
         boolean[] enc2 = Encoder.encode(seq2);
-        int dist = DistanceFinder.findDistance(enc1, enc2,0,enc1.length,10);
-        System.out.println(dist);
+        // int dist = DistanceFinder.findDistance(enc1, enc2,0,enc1.length,10);
+        ArrayList<Integer[]> findSeq = SeqFinder.findSeqCheckStart(enc1, enc2, 3, 0, 200,true);
+        // print arraylist of integer arrays
+        for (Integer[] i : findSeq) {
+            System.out.println(Arrays.toString(i));
+            int start = i[0];
+            System.out.println(seq1.substring(start));
+        }
         // String inFile = args[0];
         // String queryInFile = args[1];
         // int threads = Integer.parseInt(args[1]);
