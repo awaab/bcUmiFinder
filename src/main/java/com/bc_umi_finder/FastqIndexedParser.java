@@ -35,10 +35,11 @@ public class FastqIndexedParser {
             String transcriptID = record[0];
             int baseCount = Integer.parseInt(record[1]);
             long start = Long.parseLong(record[2]);
+            long qualStart = Long.parseLong(record[5]);
             int basePerLine = Integer.parseInt(record[3]);
             int charPerLine = Integer.parseInt(record[4]);
             
-            fastqIndexMap.put(transcriptID, new fastqIndexEntry(baseCount, start, charPerLine, basePerLine));
+            fastqIndexMap.put(transcriptID, new fastqIndexEntry(baseCount, start, charPerLine, basePerLine,qualStart));
         }
     }
 
@@ -91,18 +92,43 @@ public class FastqIndexedParser {
         return baseSequence;
     }
 
+    public int[] getTranscriptQual(fastqIndexEntry fastqEntry) throws IOException {
+        int linesCount = (int) Math.ceil(fastqEntry.baseCount / (float) fastqEntry.basePerLine);
+        int byteTotal = linesCount * fastqEntry.charPerLine + fastqEntry.basePerLine
+                - fastqEntry.baseCount % fastqEntry.basePerLine;
+        char[] fastqRead = readfastqRandomAccess(fastqEntry.qualStart, byteTotal);
+        int[] qualSequence = new int[fastqEntry.baseCount];
+        int ifastqRead = 0;
+        for (int i = 0; i < fastqEntry.baseCount; i++) {
+            try {
+                if (fastqRead[ifastqRead] == '\n')
+                    ifastqRead++;
+
+                    qualSequence[i] = fastqRead[ifastqRead];
+            } catch (Exception e) {
+
+            }
+
+            ifastqRead++;
+        }
+        return qualSequence;
+    }
+
+
     
     public class fastqIndexEntry {
         public long start;
+        public long qualStart;
         public int charPerLine;
         public int basePerLine;
         public int baseCount;
 
-        public fastqIndexEntry(int baseCount, long start, int charPerLine, int basePerLine) {
+        public fastqIndexEntry(int baseCount, long start, int charPerLine, int basePerLine, long qualStart) {
             this.start = start;
             this.charPerLine = charPerLine;
             this.basePerLine = basePerLine;
             this.baseCount = baseCount;
+            this.qualStart = qualStart;
         }
 
         public String toString() {

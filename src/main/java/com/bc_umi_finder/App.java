@@ -15,20 +15,68 @@ import java.util.concurrent.ExecutionException;
  * Hello world!
  */
 public final class App {
-
-    public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
-        String seq1 = "GGTGTACTTCGTTCAGTTACGTATTGCTCTACACGGCCTCTTCCGATCTTTAACGTCGAGCTGACTATTACGCTTTTTTTTTTTTTTTTTTTTTTTAGTAAAACTGAGATACTTATGAAAAAAGCCAAAATTCTTAAATGGTTGGGGGTTGGGTTTAAACAACTGCCTCAACATACGGAAACACAGGTCTTATGATACTTTACTTACCCCATGTACTCTACGTTGATACCACTGCTTAACCAATACGTAAC";
-        String seq2 = "TTTTTTTTTTTTTTTTTT";
-        boolean[]  enc1 = Encoder.encode(seq1);
-        boolean[] enc2 = Encoder.encode(seq2);
-        // int dist = DistanceFinder.findDistance(enc1, enc2,0,enc1.length,10);
-        ArrayList<Integer[]> findSeq = SeqFinder.findSeqCheckStart(enc1, enc2, 3, 0, 200,true);
-        // print arraylist of integer arrays
-        for (Integer[] i : findSeq) {
-            System.out.println(Arrays.toString(i));
-            int start = i[0];
-            System.out.println(seq1.substring(start));
+    // get mean of int array
+    public static double getMean(double[] arr) {
+        double sum = 0;
+        for (int i = 0; i < arr.length; i++) {
+            sum += arr[i];
         }
+        return sum / arr.length;
+    }
+    
+    // convert phred array to probability
+    public static double[] phredToProb(int[] arr) {
+        double[] prob = new double[arr.length];
+        for (int i = 0; i < arr.length; i++) {
+            prob[i] = Math.pow(10, -arr[i] / 10.0);
+        }
+        return prob;
+    }
+
+    // convert probability value to phred
+    public static double probToPhred(double prob) {
+        return (-10 * Math.log10(prob));
+    }
+
+
+
+    public static void main(String[] args) throws Exception {
+
+        FastqIndexedParser fqParser = new FastqIndexedParser("D:/BC_UMI_FIND/small.SC_pass_combined.fastq","D:/BC_UMI_FIND/small.SC_pass_combined.fastq.fai");
+        String readId = "3155ca9f-91ae-4646-9f4b-4a656785c384";
+        fqParser.getfastqEntry(readId);
+        char [] seq = fqParser.getTranscriptSequence(fqParser.getfastqEntry(readId));
+        int [] qual = fqParser.getTranscriptQual(fqParser.getfastqEntry(readId));
+        // print char array
+        // 13.225380
+        System.out.println(Arrays.toString(seq));
+        // System.out.println(Arrays.toString(qual));
+        // print length of seq and qual
+        System.out.println(seq.length);
+        System.out.println(qual.length);
+        // subtract 31 from all qual values
+        for (int i = 0; i < qual.length; i++) {
+            qual[i] -= 33;
+        }
+        System.out.println(Arrays.toString(qual));
+        double [] qualD = phredToProb(qual);
+        System.out.println(Arrays.toString(qualD));
+        System.out.println(probToPhred(getMean(qualD)));
+        // get mean of array
+
+
+        // String seq1 = "GGTGTACTTCGTTCAGTTACGTATTGCTCTACACGGCCTCTTCCGATCTTTAACGTCGAGCTGACTATTACGCTTTTTTTTTTTTTTTTTTTTTTTAGTAAAACTGAGATACTTATGAAAAAAGCCAAAATTCTTAAATGGTTGGGGGTTGGGTTTAAACAACTGCCTCAACATACGGAAACACAGGTCTTATGATACTTTACTTACCCCATGTACTCTACGTTGATACCACTGCTTAACCAATACGTAAC";
+        // String seq2 = "TTTTTTTTTTTTTTTTTT";
+        // boolean[]  enc1 = Encoder.encode(seq1);
+        // boolean[] enc2 = Encoder.encode(seq2);
+        // // int dist = DistanceFinder.findDistance(enc1, enc2,0,enc1.length,10);
+        // ArrayList<Integer[]> findSeq = SeqFinder.findSeqCheckStart(enc1, enc2, 3, 0, 200,true);
+        // // print arraylist of integer arrays
+        // for (Integer[] i : findSeq) {
+        //     System.out.println(Arrays.toString(i));
+        //     int start = i[0];
+        //     System.out.println(seq1.substring(start));
+        // }
         // String inFile = args[0];
         // String queryInFile = args[1];
         // int threads = Integer.parseInt(args[1]);
