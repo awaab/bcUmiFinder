@@ -1,5 +1,6 @@
 package com.bc_umi_finder;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,18 +50,20 @@ public class ClusteringBC {
     }
     // main function
     public static void main(String[] args) throws Exception {
-        String fastqFile = "D:/BC_UMI_FIND/small.SC_pass_combined.fastq";// args[0];
-        String resultFile ="D:/BC_UMI_FIND/small.SC_pass_combined.fastq.polyA.found.txt";// args[1];
+        String fastqFile = args[0];// "D:/BC_UMI_FIND/small.SC_pass_combined.fastq";
+        String resultFile = args[1];// "D:/BC_UMI_FIND/small.SC_pass_combined.fastq.polyA.found.txt";
         ClusteringBC bcFinder = new ClusteringBC(fastqFile, resultFile);
         int [][] distanceMatrix = bcFinder.distanceMatrix();
-        for(int i = 0; i < 3; i++){
-            for(int j = 0; j < 3; j++){
-                if(i==j)continue;
-                    System.out.println(bcFinder.reads[i] + "\t" + bcFinder.reads[j]);
-                    // print distance
-                    System.out.println(distanceMatrix[i][j]);
-                    // print string array
+        
+        // write matrix in result file
+        String outFile = fastqFile + ".BC.matrix";
+        BufferedWriter writer = new BufferedWriter(new java.io.FileWriter(outFile));
+        for(int i = 0; i < distanceMatrix.length; i++){
+            for(int j = 0; j < distanceMatrix[i].length; j++){
+                writer.write(distanceMatrix[i][j] + "\t");
             }
+            writer.write("\n");
         }
+        writer.close();
     }
 }
