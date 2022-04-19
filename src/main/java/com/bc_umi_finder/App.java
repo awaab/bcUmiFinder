@@ -45,23 +45,33 @@ public final class App {
         FastqIndexedParser fqParser = new FastqIndexedParser("D:/BC_UMI_FIND/small.SC_pass_combined.fastq","D:/BC_UMI_FIND/small.SC_pass_combined.fastq.fai");
         String readId = "3155ca9f-91ae-4646-9f4b-4a656785c384";
         fqParser.getfastqEntry(readId);
-        char [] seq = fqParser.getTranscriptSequence(fqParser.getfastqEntry(readId));
-        int [] qual = fqParser.getTranscriptQual(fqParser.getfastqEntry(readId));
+        char [] seq = fqParser.getTranscriptSubSequence(fqParser.getfastqEntry(readId),10,10);
         // print char array
-        // 13.225380
         System.out.println(Arrays.toString(seq));
+
+        char [] seqBig = fqParser.getTranscriptSequence(fqParser.getfastqEntry(readId));
+        // print char array
+        System.out.println(Arrays.toString(seqBig));
+        
+
+
+
+        // int [] qual = fqParser.getTranscriptQual(fqParser.getfastqEntry(readId));
+        // // print char array
+        // // 13.225380
+        // System.out.println(Arrays.toString(seq));
+        // // System.out.println(Arrays.toString(qual));
+        // // print length of seq and qual
+        // System.out.println(seq.length);
+        // System.out.println(qual.length);
+        // // subtract 31 from all qual values
+        // for (int i = 0; i < qual.length; i++) {
+        //     qual[i] -= 33;
+        // }
         // System.out.println(Arrays.toString(qual));
-        // print length of seq and qual
-        System.out.println(seq.length);
-        System.out.println(qual.length);
-        // subtract 31 from all qual values
-        for (int i = 0; i < qual.length; i++) {
-            qual[i] -= 33;
-        }
-        System.out.println(Arrays.toString(qual));
-        double [] qualD = phredToProb(qual);
-        System.out.println(Arrays.toString(qualD));
-        System.out.println(probToPhred(getMean(qualD)));
+        // double [] qualD = phredToProb(qual);
+        // System.out.println(Arrays.toString(qualD));
+        // System.out.println(probToPhred(getMean(qualD)));
         // get mean of array
 
 

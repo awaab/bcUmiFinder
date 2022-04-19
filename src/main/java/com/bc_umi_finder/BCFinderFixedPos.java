@@ -23,6 +23,7 @@ public class BCFinderFixedPos {
     private BufferedWriter output;
     private BufferedWriter negOutput;
     private ExecutorService executor;
+    final  private int bcLength = 16;
 
     public BCFinderFixedPos(String bcFile, String resFile, String fastqFile, int threads, int maxEditDistance)
             throws Exception {
@@ -50,7 +51,22 @@ public class BCFinderFixedPos {
         this.negOutput = new BufferedWriter(new FileWriter(fastqFile + ".BC.notFound.txt"));
 
     }
-
+    // public ArrayList<boolean[]> getAllBCbyPos() throws IOException {
+    //     ArrayList<boolean[]> bcList =  new ArrayList<boolean[]>();
+    //     while(true){
+    //         String[] read = this.resultReader.next();
+    //         if(read == null){
+    //             break;
+    //         }
+    //         int offset = this.bcLength;
+    //         int 
+    //         char [] bcSeq = fqp.getTranscriptSubSequence(fqp.getfastqEntry(read[0]),start,offset);
+    //         boolean [] bcSeqEncoded = Encoder.encode(bcSeq);
+    //         bcList.add(bcSeqEncoded);
+    //     }
+    //     return bcList;
+        
+    // }
     public void find() throws InterruptedException, ExecutionException, IOException {
         int readsSoFar = 0;
         while (true) {

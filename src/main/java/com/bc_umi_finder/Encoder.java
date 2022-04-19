@@ -35,6 +35,23 @@ public class Encoder {
         return binary;
     }
     //
+    public static boolean isValidSeq(char [] seq)
+    {
+        for(int i = 0; i < seq.length; i++)
+        {
+            switch(seq[i])
+            {
+                case 'A':
+                case 'C':
+                case 'G':
+                case 'T':
+                    break;
+                default:
+                    return false;
+            }
+        }
+        return true;
+    }
     public static boolean[] encode(char [] sequence) {
         boolean[] binary = new boolean[sequence.length * 2];
         for (int i = 0; i < sequence.length; i++) {

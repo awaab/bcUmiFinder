@@ -71,27 +71,23 @@ public class FastqIndexedParser {
     }
 
     public char[] getTranscriptSequence(fastqIndexEntry fastqEntry) throws IOException {
-        int linesCount = (int) Math.ceil(fastqEntry.baseCount / (float) fastqEntry.basePerLine);
-        int byteTotal = linesCount * fastqEntry.charPerLine + fastqEntry.basePerLine
-                - fastqEntry.baseCount % fastqEntry.basePerLine;
-        char[] fastqRead = readfastqRandomAccess(fastqEntry.start, byteTotal);
-        char[] baseSequence = new char[fastqEntry.baseCount];
-        int ifastqRead = 0;
-        for (int i = 0; i < fastqEntry.baseCount; i++) {
-            try {
-                if (fastqRead[ifastqRead] == '\n')
-                    ifastqRead++;
-
-                baseSequence[i] = fastqRead[ifastqRead];
-            } catch (Exception e) {
-
-            }
-
-            ifastqRead++;
+        char[] fastqRead = readfastqRandomAccess(fastqEntry.start,fastqEntry.baseCount);
+        if(Encoder.isValidSeq(fastqRead)){
+            return fastqRead;
         }
-        return baseSequence;
+        else{
+            return null;
+        }
     }
-
+    public char[]  getTranscriptSubSequence(fastqIndexEntry fastqEntry, int start, int offset)throws IOException{
+        char[] fastqRead = readfastqRandomAccess(fastqEntry.start + start, offset);
+        if(Encoder.isValidSeq(fastqRead)){
+            return fastqRead;
+        }
+        else{
+            return null;
+        }
+    }
     public int[] getTranscriptQual(fastqIndexEntry fastqEntry) throws IOException {
         int linesCount = (int) Math.ceil(fastqEntry.baseCount / (float) fastqEntry.basePerLine);
         int byteTotal = linesCount * fastqEntry.charPerLine + fastqEntry.basePerLine
