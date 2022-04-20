@@ -68,18 +68,14 @@ public class ClusteringBC {
     }
 
     public void writeDistanceMatrix(String fileName) throws IOException {
-        int[][] distanceMatrix = new int[this.barcodes.length][this.barcodes.length];
-        for (int i = 0; i < this.barcodes.length; i++) {
-            for (int j = 0; j < this.barcodes.length; j++) {
-                distanceMatrix[i][j] = DistanceFinder.findDistance(this.barcodes[i], this.barcodes[j], 0,
-                        this.barcodes[i].length, Integer.MAX_VALUE);
-            }
-        }
+
         // get distance and write in a file
         BufferedWriter bw = new BufferedWriter(new java.io.FileWriter(fileName + "distance.txt"));
         for (int i = 0; i < this.barcodes.length; i++) {
             for (int j = i + 1; j < this.barcodes.length; j++) {
-                bw.write(distanceMatrix[i][j] + " ");
+                int dist = DistanceFinder.findDistance(this.barcodes[i], this.barcodes[j], 0,
+                        this.barcodes[i].length, Integer.MAX_VALUE);
+                bw.write(dist);
             }
             bw.write("\n");
 
