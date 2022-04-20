@@ -75,7 +75,7 @@ public class ClusteringBC {
             for (int j = i + 1; j < this.barcodes.length; j++) {
                 int dist = DistanceFinder.findDistance(this.barcodes[i], this.barcodes[j], 0,
                         this.barcodes[i].length, Integer.MAX_VALUE);
-                bw.write(dist);
+                bw.write("" + dist +" ");
             }
             bw.write("\n");
 
