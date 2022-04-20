@@ -41,17 +41,27 @@ public final class App {
 
 
     public static void main(String[] args) throws Exception {
+        String read0 = "TTGTACTTCGTTCAAGTTACGTATTGCTCTACACGACGCTCTTCCGATCTCCGTGAAGTCCCATGCATTAGCTTTATTTTTTTTTTTTTTTTTTTTTTTTTTTGGGATTGACTCACGGCTGTCTCTTATACACATCTGACCCCATGTACTCTGCGTTGACCACCACTGCTTCCCATGTACTCTGCGTTGATACCACTGCTTCCCATGTACTCTGCGTTGA";
+        String read2 = "TTGTACTTCGTTCAGTTACGTATTGCTCTACACGACGCTCTTCCGATCTTACCGCAGCAAGAGTGCATGTTATTAAGATTTTTTTTTTTTTTTTTTTTTTTTTTTTTTAGAGTTTCATTTTTACAGAGAAGACACAAGGTAAAGAAAGACAACCACTTTGGAGAGGGATCATGGTGAGGGCAATGTCACTGTCATGGCCATAGTACAAGCCTTCCAAGAAAAGGGACCTGCGTTATTCCTCACAAGCTGCCCCTGTCCCACCCCATGTACTCTGCGTTGATACCACCCCATGTACTCTGCGTTGATACCACTGCTTCCCATGTACTCTGCGTT";
+        String bc0 = read0.substring(72-(12+16),72-(12));
+        String bc2 = read2.substring(78-(12+16),78-(12));
+        boolean enc0[] = Encoder.encode(bc0);
+        boolean enc2[] = Encoder.encode(bc2);
+        int dist = DistanceFinder.findDistance(enc0, enc2,0,enc0.length,200); 
+        System.out.println(dist);
+        System.out.println(bc0);
+        System.out.println(bc0.length());
+        System.out.println(bc2);
+        // FastqIndexedParser fqParser = new FastqIndexedParser("D:/BC_UMI_FIND/small.SC_pass_combined.fastq","D:/BC_UMI_FIND/small.SC_pass_combined.fastq.fai");
+        // String readId = "3155ca9f-91ae-4646-9f4b-4a656785c384";
+        // fqParser.getfastqEntry(readId);
+        // char [] seq = fqParser.getTranscriptSubSequence(fqParser.getfastqEntry(readId),10,10);
+        // // print char array
+        // System.out.println(Arrays.toString(seq));
 
-        FastqIndexedParser fqParser = new FastqIndexedParser("D:/BC_UMI_FIND/small.SC_pass_combined.fastq","D:/BC_UMI_FIND/small.SC_pass_combined.fastq.fai");
-        String readId = "3155ca9f-91ae-4646-9f4b-4a656785c384";
-        fqParser.getfastqEntry(readId);
-        char [] seq = fqParser.getTranscriptSubSequence(fqParser.getfastqEntry(readId),10,10);
-        // print char array
-        System.out.println(Arrays.toString(seq));
-
-        char [] seqBig = fqParser.getTranscriptSequence(fqParser.getfastqEntry(readId));
-        // print char array
-        System.out.println(Arrays.toString(seqBig));
+        // char [] seqBig = fqParser.getTranscriptSequence(fqParser.getfastqEntry(readId));
+        // // print char array
+        // System.out.println(Arrays.toString(seqBig));
         
 
 

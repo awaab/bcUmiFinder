@@ -19,6 +19,14 @@ public class ClusteringBC {
         this.loadBCReads();
         
     }
+    // getter dfor reads
+    public String[] getReads() {
+        return reads;
+    }
+    // gettr for barcodes
+    public boolean[][] getBarcodes() {
+        return barcodes;
+    }
     public void loadBCReads() throws IOException{
         ArrayList<boolean[]> bcList =  new ArrayList<boolean[]>();
         ArrayList<String> readList =  new ArrayList<String>();
@@ -31,8 +39,12 @@ public class ClusteringBC {
             int offset = this.bcLength;
             int polyAStart = Integer.parseInt(readRecord[2]);
             int start  =  polyAStart - (this.bcLength + this.umiLength);
+            if(start<0){
+                continue;
+            }
             char [] bcSeq = fqp.getTranscriptSubSequence(fqp.getfastqEntry(readID),start,offset);
-            boolean [] bcSeqEncoded = Encoder.encode(bcSeq);
+            boolean [] bcSeqEncoded = null;
+            bcSeqEncoded = Encoder.encode(bcSeq);
             bcList.add(bcSeqEncoded);
             readList.add(readID);
         }
@@ -65,5 +77,18 @@ public class ClusteringBC {
             writer.write("\n");
         }
         writer.close();
+        // write reads in result file
+        String outFile2 = fastqFile + ".BC.reads";
+        BufferedWriter writer2 = new BufferedWriter(new java.io.FileWriter(outFile2));
+        for(int i = 0; i < bcFinder.getReads().length; i++){
+            writer2.write(bcFinder.getReads()[i] + "\n");
+        }
+        writer2.close();
+        // write barcodes in result file
+        String outFile3 = fastqFile + ".BC.barcodes";
+        BufferedWriter writer3 = new BufferedWriter(new java.io.FileWriter(outFile3));
+        for(int i = 0; i < bcFinder.getBarcodes().length; i++){
+            writer3.write(Arrays.toString(bcFinder.getBarcodes()[i]) + "\n");
+        }
     }
 }
