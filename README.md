@@ -2,7 +2,7 @@
 A pipeline for identifying cell barcodes and UMIs (unique moleculer identifiers) in ONT RNA long reads that were barcoded using the 10x Genomics platform to produce gene expression matrix.
 
 ## Steps
-Insert image here
+![Alt text](https://github.com/awaab/bcUmiFinder/blob/main/graph_bc_umi.PNG?raw=true)
 * Find PolyA/PolyT in the expected location in the reads, and filter out reads that don't have PolyA/PolyT
 * Get the barcode location relative to the PolyA/PolyT location, and create a list of barcodes.
 * Cluster the barcodes using edit distance between barcodes in the distance matrix.
